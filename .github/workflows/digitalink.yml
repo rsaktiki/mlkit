@@ -13,10 +13,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: android
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -27,14 +23,17 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Grant execute permission to Gradle
+      - name: Grant Gradle permission
         run: chmod +x ./gradlew
 
-      - name: Build Digital Ink module
-        run: ./gradlew :digitalink:assembleDebug
+      - name: Build Digital Ink only
+        run: ./gradlew :android:digitalink:assembleDebug
 
-      - name: Upload APK Artifact
+      - name: List APK output
+        run: ls -R android/digitalink/build/outputs/apk/
+
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: digitalink-debug-apk
-          path: android/digitalink/build/outputs/apk/debug/digitalink-debug.apk
+          path: android/digitalink/build/outputs/apk/debug/*.apk
