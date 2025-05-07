@@ -17,23 +17,20 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Setup JDK
+      - name: Set up JDK
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: 17
 
-      - name: Grant Gradle permission
-        run: chmod +x ./gradlew
-
-      - name: Build Digital Ink only
-        run: ./gradlew :android:digitalink:assembleDebug
-
-      - name: List APK output
-        run: ls -R android/digitalink/build/outputs/apk/
+      - name: Change to digitalink directory
+        working-directory: android/digitalink
+        run: |
+          chmod +x ./gradlew
+          ./gradlew assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: digitalink-debug-apk
-          path: android/digitalink/build/outputs/apk/debug/*.apk
+          name: digitalink-apk
+          path: android/digitalink/app/build/outputs/apk/debug/*.apk
